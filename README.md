@@ -13,16 +13,16 @@ Features
 --------
 
 * Follows the definitions of entities from the Microsoft site, but also includes human readable format.
-* A testing command-line tool that save entries in JSON format. It also support parallel workers.
+* Sample command line tools for:
+  ** Retrieving the information of an author saving the entries in JSON format. It also support parallel workers.
+  ** Testing similarity between two strings
 
 Examples
 --------
 
-The only option so far for the command line script (test.py) is author.
-
 Retrieve the articles written by Einstein:
 
-    $ test.py --author "albert einstein"
+    $ python samples/author.py --author "albert einstein"
 
 License
 -------

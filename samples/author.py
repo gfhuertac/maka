@@ -1,6 +1,7 @@
 """
 Test Module
 """
+import os
 import sys
 import json
 
@@ -10,8 +11,12 @@ from queue import Queue
 from threading import Thread
 from time import sleep
 from dotenv import load_dotenv
-from optparse import OptionParser, IndentedHelpFormatter, OptionGroup
+from optparse import IndentedHelpFormatter, OptionGroup, OptionParser
 
+import inspect
+currentdir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
+parentdir = os.path.dirname(currentdir)
+os.sys.path.insert(0,parentdir)
 import classes
 import inquirer
 
@@ -88,7 +93,7 @@ def main():
     """
     The method called when running this script
     """
-    usage = """test.py --author "albert einstein"
+    usage = """author.py --author "albert einstein"
 A command-line interface to Microsoft's Academic Knowledge."""
 
     fmt = IndentedHelpFormatter(max_help_position=50, width=100)
