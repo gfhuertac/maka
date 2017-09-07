@@ -28,7 +28,7 @@ class AcademicConf(object):
     """
 
     VERSION = 'latest'
-    LOG_LEVEL = 4
+    LOG_LEVEL = os.getenv('LOG_LEVEL', 1)
     MAX_PAGE_RESULTS = 50
     BASE_URL = 'https://westus.api.cognitive.microsoft.com/academic/v1.0'
     USER_AGENT = 'Mozilla/5.0 (X11; Linux x86_64; rv:27.0) Gecko/20100101 Firefox/27.0'
@@ -331,6 +331,18 @@ class SimilarityQuery(AcademicQuery):
 
         return args
 
+class CalcHistogramQuery(EvaluateQuery):
+    """
+    This class represents a query to the calc histogram endpoint
+    """
+    CALC_HISTOGRAM_URL = AcademicConf.BASE_URL + '/calchistogram'
+
+    def __init__(self, expr=None):
+        EvaluateQuery.__init__(self, expr)
+
+    def get_url(self):
+        return self.CALC_HISTOGRAM_URL
+
 class AcademicQuerier(object):
     """
     Class in charge of making the requests to the Microsoft's Academic
@@ -370,10 +382,19 @@ class AcademicQuerier(object):
             self.query = SimilarityQuery()
             self.query.set_s1(arguments.get('s1', self.query.s1))
             self.query.set_s2(arguments.get('s2', self.query.s2))
+        elif query_type == AcademicQueryType.HISTOGRAM:
+            self.query = CalcHistogramQuery()
+            self.query.set_expr(arguments.get('expr', self.query.expr))
+            self.query.set_attributes(arguments.get('attributes', self.query.attributes))
+            self.query.set_count(arguments.get('count', self.query.count))
+            self.query.set_offset(arguments.get('offset', self.query.offset))
+            self.query.set_model(arguments.get('model', self.query.model))
         else:
             raise classes.QueryTypeError('Query type not supported.')
 
     def post(self):
+        if os.getenv('MAKA_SUBSCRIPTION_KEY', None) is None:
+             raise KeyError('MAKA_SUBSCRIPTION_KEY')
         headers = {
             'user-agent': AcademicConf.USER_AGENT,
             'Ocp-Apim-Subscription-Key': os.environ['MAKA_SUBSCRIPTION_KEY']
@@ -382,6 +403,7 @@ class AcademicQuerier(object):
         data = self.query.get_body()
         AcademicUtils.log('debug', 'Sending {}/{}'.format(url, data))
         the_request = requests.post(url, data=data, headers=headers)
+        AcademicUtils.log('debug', 'Received {}'.format(the_request.text))
         if  the_request.status_code < 300:
             if self.query_type == AcademicQueryType.INTERPRET:
                 jobject = the_request.json()
@@ -392,6 +414,10 @@ class AcademicQuerier(object):
                 return [classes.AcademicPaperParser.parse(entity) for entity in jobject['entities']]
             elif self.query_type == AcademicQueryType.SIMILARITY:
                 return float(the_request.text)
+            elif self.query_type == AcademicQueryType.HISTOGRAM:
+                jobject = the_request.json()
+                return [classes.AcademicHistogramParser.parse(entity)
+                        for entity in jobject['histograms']]
         else:
             raise classes.Error('An error ocurred while processing the request. Code: {}'
                                 .format(the_request.status_code))

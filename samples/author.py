@@ -13,12 +13,19 @@ from time import sleep
 from dotenv import load_dotenv
 from optparse import IndentedHelpFormatter, OptionGroup, OptionParser
 
-import inspect
-currentdir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
-parentdir = os.path.dirname(currentdir)
-os.sys.path.insert(0,parentdir)
-import classes
-import inquirer
+dotenv_path = join(dirname(__file__), '.env')
+load_dotenv(dotenv_path)
+
+try:
+    import maka.classes as classes
+    import maka.inquirer as inquirer
+except ImportError:
+    import inspect
+    CURRENT_DIR = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
+    PARENT_DIR = os.path.dirname(CURRENT_DIR)
+    os.sys.path.insert(0, PARENT_DIR)
+    import classes
+    import inquirer
 
 DELAY = 1
 NUM_QUERIER_THREADS = 2
@@ -105,13 +112,11 @@ A command-line interface to Microsoft's Academic Knowledge."""
     parser.add_option_group(group)
     options, _ = parser.parse_args()
 
-    # Show help if we have neither keyword search nor author name
+    # Show help if we have no author name
     if len(sys.argv) == 1:
         parser.print_help()
         return 1
     
-    dotenv_path = join(dirname(__file__), '.env')
-    load_dotenv(dotenv_path)
     for i in range(NUM_QUERIER_THREADS):
         worker = Thread(target=querier_enclosure, args=(i, THE_QUEUE,))
         worker.setDaemon(True)

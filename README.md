@@ -20,9 +20,20 @@ Features
 Examples
 --------
 
+To run the samples first you need to copy the file env.sample to .env and modify it to add your Microsoft's Cognitive service key. This key is obtained from the azure portal linked to your subscription.
+Check [their official site](https://azure.microsoft.com/en-us/try/cognitive-services/) for more information.
+
 Retrieve the articles written by Einstein:
 
     $ python samples/author.py --author "albert einstein"
+
+Retrieve histograms for (Y)ear and (F)ield of study for Albert Einstein:
+
+    $ python samples/calc_histogram.py -e "Composite(AA.AuN='albert einstein')" -a "Y,F.FN"
+
+Retrieve similarity between two texts:
+
+    $ python samples/similarity.py --s1 "Imagination is more important than knowledge" --s2 "Insanity: doing the same thing over and over again and expecting different results"
 
 License
 -------

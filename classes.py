@@ -358,6 +358,43 @@ class AcademicInterpretationRule(AcademicObject):
             'value': [None, 'value', 'Value', 2]  # pylint: disable-msg=C0326
         }
 
+class AcademicHistogram(AcademicObject):
+    """
+    A class representing an histogram of an attribute
+    retrieved from Microsoft's Academic Knowledge API.
+    """
+    def __init__(self):
+        AcademicObject.__init__(self)
+        # The triplets for each keyword correspond to
+        # (0) the actual value,
+        # (1) the field name for MAKA,
+        # (2) a user-suitable label for the item, and
+        # (3) an ordering index.
+        self.attrs = {
+            'attribute': [None, 'attribute',       'Attribute', 0], # pylint: disable-msg=C0326
+            'values':    [None, 'distinct_values', 'Values',    1], # pylint: disable-msg=C0326
+            'count':     [None, 'total_count',     'Count',     2], # pylint: disable-msg=C0326
+            'data':      [None, 'data',            'Data',      3]  # pylint: disable-msg=C0326
+        }
+
+class AcademicHistogramValue(AcademicObject):
+    """
+    A class representing the value of an attribute of an histogram
+    retrieved from Microsoft's Academic Knowledge API.
+    """
+    def __init__(self):
+        AcademicObject.__init__(self)
+        # The triplets for each keyword correspond to
+        # (0) the actual value,
+        # (1) the field name for MAKA,
+        # (2) a user-suitable label for the item, and
+        # (3) an ordering index.
+        self.attrs = {
+            'value':       [None, 'value', 'Values',      0], # pylint: disable-msg=C0326
+            'probability': [None, 'prob',  'Probability', 1], # pylint: disable-msg=C0326
+            'count':       [None, 'count', 'Count',       2]  # pylint: disable-msg=C0326
+        }
+
 class AcademicParser(object):
     """
     Default parser for Academic objects
@@ -436,4 +473,18 @@ class AcademicInterpretationRuleParser(AcademicParser):
         target['name'] = response['name']
         target['type'] = response['output']['type']
         target['value'] = response['output']['value']
+        return target
+
+class AcademicHistogramParser(AcademicParser):
+    """
+    Parser for AcademicHistogramAttribute objects
+    """
+    @staticmethod
+    def parse(response):
+        target = AcademicHistogram()
+        target['attribute'] = response['attribute']
+        target['values'] = response['distinct_values']
+        target['count'] = response['total_count']
+        target['data'] = [AcademicParser._parse(val, AcademicHistogramValue)
+                          for val in response['histogram']]
         return target
