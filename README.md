@@ -17,6 +17,15 @@ Features
   ** Retrieving the information of an author saving the entries in JSON format. It also support parallel workers.
   ** Testing similarity between two strings
 
+Installation
+------------
+
+* To install the requirements do
+
+    $ pip install -r requirements.txt
+
+* That´s all but I do recommend to use the library inside a virtual environment. Please check [this document](http://docs.python-guide.org/en/latest/dev/virtualenvs/) for more information.
+
 Examples
 --------
 
