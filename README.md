@@ -1,12 +1,12 @@
 maka
 ==========
 
-maka is a Python module that implements a querier and parser for the Microsoft Academic Knowledge API.
+maka is a Python module that implements a querier and parser for the [Microsoft Academic Knowledge API](https://docs.microsoft.com/en-us/azure/cognitive-services/academic-knowledge/home).
 Its classes can be used independently, but it can also be invoked as a command-line tool.
 
 If you'd like to get in touch, email me at gonzalo.huerta  _AT_ uai.cl or ping me [on Twitter](http://twitter.com/gohucan).
 
-Regards,<br>
+Regards,
 Gonzalo
 
 Features
@@ -14,15 +14,15 @@ Features
 
 * Follows the definitions of entities from the Microsoft site, but also includes human readable format.
 * Sample command line tools for:
-  ** Retrieving the information of an author saving the entries in JSON format. It also support parallel workers.
-  ** Testing similarity between two strings
+  * Retrieving the information of an author saving the entries in JSON format. It also support parallel workers.
+  * Testing similarity between two strings
 
 Installation
 ------------
 
 * To install the requirements do
 
-    $ pip install -r requirements.txt
+      $ pip install -r requirements.txt
 
 * That´s all but I do recommend to use the library inside a virtual environment. Please check [this document](http://docs.python-guide.org/en/latest/dev/virtualenvs/) for more information.
 
