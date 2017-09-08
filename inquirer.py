@@ -28,7 +28,7 @@ class AcademicConf(object):
     """
 
     VERSION = 'latest'
-    LOG_LEVEL = os.getenv('LOG_LEVEL', 1)
+    LOG_LEVEL = int(os.getenv('LOG_LEVEL', 1))
     MAX_PAGE_RESULTS = 50
     BASE_URL = 'https://westus.api.cognitive.microsoft.com/academic/v1.0'
     USER_AGENT = 'Mozilla/5.0 (X11; Linux x86_64; rv:27.0) Gecko/20100101 Firefox/27.0'
@@ -169,7 +169,7 @@ class InterpretQuery(AcademicQuery):
         1 means that auto-completion suggestions are generated based on the grammar and graph data.
         """
         msg = 'complete must be numeric'
-        self.count = AcademicUtils.ensure_int(value, msg)
+        self.complete = AcademicUtils.ensure_int(value, msg)
 
     def set_count(self, value):
         """
