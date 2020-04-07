@@ -9,13 +9,13 @@ dotenv_path = join(dirname(__file__), '.env')
 load_dotenv(dotenv_path)
 
 try:
-    import maka.inquirer as inquirer
+    import maka
 except ImportError:
     import inspect
     CURRENT_DIR = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
     PARENT_DIR = os.path.dirname(CURRENT_DIR)
     os.sys.path.insert(0, PARENT_DIR)
-    import inquirer
+    import maka
 
 def main():
     """
@@ -42,7 +42,7 @@ A command-line tool to test similarity to Microsoft's Academic Knowledge."""
         print('Both strings are mandatory!')
         return 1
 
-    query = inquirer.AcademicQuerier(inquirer.AcademicQueryType.SIMILARITY, {
+    query = maka.AcademicQuerier(maka.AcademicQueryType.SIMILARITY, {
         's1': options.s1,
         's2': options.s2
     })
