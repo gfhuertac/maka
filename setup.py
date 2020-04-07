@@ -14,5 +14,5 @@ setup(
     packages=find_packages(),
     python_requires=">=3.4",
     install_requires=["requests"],
-    url="https://github.com/CameronDevine/mr_sim",
+    url="https://github.com/gfhuertac/maka",
 )
