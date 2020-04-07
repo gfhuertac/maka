@@ -125,7 +125,9 @@ class AcademicPaper(AcademicObject):
             'conference':     [None, 'C',   'Conference',     9],  # pylint: disable-msg=C0326
             'references':     [None, 'RId', 'References',     10], # pylint: disable-msg=C0326
             'excerpt':        [None, 'W',   'Excerpt',        11], # pylint: disable-msg=C0326
-            'metadata':       [None, 'E',   'Metadata',       12]  # pylint: disable-msg=C0326
+            'metadata':       [None, 'E',   'Metadata',       12], # pylint: disable-msg=C0326
+            'doi':            [None, 'DOI', 'DOI',            13], # pylint: disable-msg=C0326
+            'display_name':   [None, 'DN',  'Display Name',   14], # pylint: disable-msg=C0326
         }
 
 class AcademicPaperMetadata(AcademicObject):
