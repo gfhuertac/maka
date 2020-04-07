@@ -9,7 +9,7 @@ import sys
 
 import requests
 
-import .classes
+from . import classes
 
 # Support unicode in both Python 2 and 3. In Python 3, unicode is str.
 if sys.version_info[0] == 3:
