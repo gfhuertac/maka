@@ -57,11 +57,12 @@ def querier_enclosure(i, q):
                 if args['query_type'] == maka.AcademicQueryType.INTERPRET:
                     expr = 'OR({})'.format(','.join([interpretation['rules'][0]['value']
                                                      for interpretation in results]))
+                    attrs = 'Ti,Y,AA.AuN'
                     THE_QUEUE.put({
                         'query_type': maka.AcademicQueryType.EVALUATE,
                         'payload':    {
                             'expr':       expr,
-                            'attributes': '*'
+                            'attributes': attrs,
                         },
                         'parent': None
                     })
@@ -78,7 +79,7 @@ def querier_enclosure(i, q):
                                     'query_type': maka.AcademicQueryType.EVALUATE,
                                     'payload':    {
                                         'expr':       expr,
-                                        'attributes': '*'
+                                        'attributes': 'Id,Ty'
                                     },
                                     'parent': result['id']
                                 })
