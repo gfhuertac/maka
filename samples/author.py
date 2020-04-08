@@ -17,15 +17,13 @@ dotenv_path = join(dirname(__file__), '.env')
 load_dotenv(dotenv_path)
 
 try:
-    import maka.classes as classes
-    import maka.inquirer as inquirer
+    import maka
 except ImportError:
     import inspect
     CURRENT_DIR = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
     PARENT_DIR = os.path.dirname(CURRENT_DIR)
     os.sys.path.insert(0, PARENT_DIR)
-    import classes
-    import inquirer
+    import maka
 
 DELAY = 1
 NUM_QUERIER_THREADS = 2
@@ -52,22 +50,22 @@ def querier_enclosure(i, q):
     while True:
         print('Worker {}: Looking for the next query'.format(i))
         args = q.get()
-        query = inquirer.AcademicQuerier(args['query_type'], args['payload'])
+        query = maka.AcademicQuerier(args['query_type'], args['payload'])
         if query is not None:
             results = query.post()
             if results:
-                if args['query_type'] == inquirer.AcademicQueryType.INTERPRET:
+                if args['query_type'] == maka.AcademicQueryType.INTERPRET:
                     expr = 'OR({})'.format(','.join([interpretation['rules'][0]['value']
                                                      for interpretation in results]))
                     THE_QUEUE.put({
-                        'query_type': inquirer.AcademicQueryType.EVALUATE,
+                        'query_type': maka.AcademicQueryType.EVALUATE,
                         'payload':    {
                             'expr':       expr,
                             'attributes': '*'
                         },
                         'parent': None
                     })
-                elif args['query_type'] == inquirer.AcademicQueryType.EVALUATE:
+                elif args['query_type'] == maka.AcademicQueryType.EVALUATE:
                     parent = args.get('parent', None)
                     branch = ROOT['articles'] if parent is None else (find_article(parent))['cites']
                     for result in results:
@@ -77,7 +75,7 @@ def querier_enclosure(i, q):
                             if parent is None:
                                 expr = 'RId={}'.format(result['id'])
                                 THE_QUEUE.put({
-                                    'query_type': inquirer.AcademicQueryType.EVALUATE,
+                                    'query_type': maka.AcademicQueryType.EVALUATE,
                                     'payload':    {
                                         'expr':       expr,
                                         'attributes': '*'
@@ -116,7 +114,7 @@ A command-line interface to Microsoft's Academic Knowledge."""
     if len(sys.argv) == 1:
         parser.print_help()
         return 1
-    
+
     for i in range(NUM_QUERIER_THREADS):
         worker = Thread(target=querier_enclosure, args=(i, THE_QUEUE,))
         worker.setDaemon(True)
@@ -124,7 +122,7 @@ A command-line interface to Microsoft's Academic Knowledge."""
 
     ROOT['author'] = options.author
     THE_QUEUE.put({
-        'query_type': inquirer.AcademicQueryType.INTERPRET,
+        'query_type': maka.AcademicQueryType.INTERPRET,
         'payload': {
            'query': 'papers by {}'.format(options.author)
         }
@@ -132,7 +130,7 @@ A command-line interface to Microsoft's Academic Knowledge."""
     print('*** Main thread waiting')
     THE_QUEUE.join()
     with open('{}.json'.format(ROOT['author'].replace(' ', '')), 'w') as outfile:
-        json.dump(ROOT, outfile, cls=classes.AcademicEncoder, indent=4)
+        json.dump(ROOT, outfile, cls=maka.classes.AcademicEncoder, indent=4)
     print('*** Done')
 
 if __name__ == "__main__":

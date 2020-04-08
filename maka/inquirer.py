@@ -9,7 +9,7 @@ import sys
 
 import requests
 
-import classes
+from . import classes
 
 # Support unicode in both Python 2 and 3. In Python 3, unicode is str.
 if sys.version_info[0] == 3:
@@ -30,7 +30,7 @@ class AcademicConf(object):
     VERSION = 'latest'
     LOG_LEVEL = int(os.getenv('LOG_LEVEL', 1))
     MAX_PAGE_RESULTS = 50
-    BASE_URL = 'https://westus.api.cognitive.microsoft.com/academic/v1.0'
+    BASE_URL = 'https://api.labs.cognitive.microsoft.com/academic/v1.0'
     USER_AGENT = 'Mozilla/5.0 (X11; Linux x86_64; rv:27.0) Gecko/20100101 Firefox/27.0'
 
 class AcademicUtils(object):
